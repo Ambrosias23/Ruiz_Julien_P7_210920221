@@ -1,0 +1,57 @@
+
+.pageCreate{
+    display: flex;
+    flex-direction: column;
+    color: $greyP;
+    
+}
+
+.create{
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    width: 50%;
+    padding-bottom: 100px;
+    .titleCreate{
+        margin-top: 10px;
+        height: 40px;
+        margin-bottom: 10px;
+        padding-left: 20px;
+        border-radius: 30px;
+        border: $greyP solid 2px;}
+        .contenuCreate{
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border-radius: 50px;
+            padding: 20px;
+            border: $greyP solid 2px;}
+            .pictureCreate{
+                margin-top: 10px;
+                margin-bottom: 15px;
+                display: flex;
+                align-self: center;}
+                .sendPictureCreate{
+                    align-self: center;}
+                    img{
+                        align-self: center;
+                        margin-top: 15px;
+                        width: 30%;
+                        
+                        border-radius: 20px;
+                    }
+                }
+.create label{
+    font-size: 20px;
+    font-weight: bold;
+}
+.create {
+        @include mobile-only {
+            width: 80%;}
+            @include tablet{
+                width: 70%;
+            }
+    }
+.pictureCreate    .img{
+        width: 20%;
+        height: 20px;
+    }
