@@ -3,34 +3,38 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 
 function Update() {
+  const userId = localStorage.getItem('userId');
   const token = localStorage.getItem('TOKEN');
+  const isLoggedIn = token === null ? false : true;
   const postData = useParams();
   const [text, setText] = useState('');
   const [title, setTitle] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [previewImage, setPreviewImage] = useState('');
-  const [userId, setUserId] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/posts/${postData.id}`, {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
-    })
-      .then((res) => {
-        return res.json();
+    if (isLoggedIn === false) {
+      navigate(`/login`);
+    } else {
+      fetch(`http://localhost:3000/api/posts/${postData.id}`, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
       })
-      .then((data) => {
-        setText(data.text);
-        setPreviewImage(data.imageUrl);
-        setUserId(data.userId);
-        setTitle(data.title);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          setText(data.text);
+          setPreviewImage(data.imageUrl);
+          setTitle(data.title);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }, []);
 
   const onImageChange = (e) => {
@@ -59,7 +63,7 @@ function Update() {
       })
       .then((data) => {
         console.log('Vous avez modifié une publication');
-        navigate('/');
+        navigate(`/#post-${postData.id}`);
       })
 
       .catch((error) => {
@@ -69,13 +73,13 @@ function Update() {
   };
   return (
     <div className="pageCreate">
-      <h1>Modifier</h1>
+      <h1>Update</h1>
 
       <form className="create" onSubmit={handleModify}>
-        <label htmlFor="Mail">Titre :</label>
+        <label htmlFor="Mail">Title :</label>
         <input
           className="titleCreate"
-          placeholder="Votre Titre"
+          placeholder="Title"
           name="title"
           type="text"
           value={title}
@@ -84,18 +88,17 @@ function Update() {
         <label htmlFor="text">Contenu :</label>
         <textarea
           className="contenuCreate"
-          placeholder="Quoi de neuf ?"
+          placeholder="What's up ?"
           type="text"
           name="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
         <label htmlFor="post" className="pictureCreate">
-          Choisissez une photo:
+          Choose a picture:
         </label>
         <input
           id="file-input"
-          
           className="sendPictureCreate"
           name="file"
           type="file"
@@ -103,7 +106,7 @@ function Update() {
           accept="image/png, image/jpeg"
         />
         <img src={previewImage} alt="" />
-        <Button buttonName="Modifier" />
+        <Button buttonName="Update" />
       </form>
     </div>
   );

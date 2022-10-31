@@ -1,110 +1,120 @@
-import React from "react";
-import Button from "../components/Button";
-import { useState } from 'react';
-import {useNavigate} from 'react-router-dom';
- 
+import Button from '../components/Button';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 export default function Signup() {
+  const token = localStorage.getItem('TOKEN');
+  const isLoggedIn = token === null ? false : true;
 
-    const [inputEmail, setInputEmail] = useState({email: ""});
-    const [inputPassword, setInputPassword] = useState({password: ""});
-    const [openSnackBar, setOpenSnackBar] = useState(false);
-    const navigate = useNavigate();
-   
-    const handleSubmit = (e) => {
-      e.preventDefault();
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate(`/`);
+    }
+  }, []);
 
-      const regExEmail = (value) => {
-        return /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/.test(value);
-      }
+  const [inputEmail, setInputEmail] = useState({ email: '' });
+  const [inputPassword, setInputPassword] = useState({ password: '' });
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const navigate = useNavigate();
 
-      if(!regExEmail(inputEmail)){
-        return setOpenSnackBar(true);
-      } 
-      
-      const regExPassword = (value) => {
-        return /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,100}$/.test(value);
-      }
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-      if(!regExPassword(inputPassword)){
-        return setOpenSnackBar(true);
-      } 
+    const regExEmail = (value) => {
+      return /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/.test(value);
+    };
 
-      fetch('http://localhost:3000/api/auth/signup', 
+    if (!regExEmail(inputEmail)) {
+      return setOpenSnackBar(true);
+    }
+
+    const regExPassword = (value) => {
+      return /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,100}$/.test(value);
+    };
+
+    if (!regExPassword(inputPassword)) {
+      return setOpenSnackBar(true);
+    }
+
+    fetch(
+      'http://localhost:3000/api/auth/signup',
 
       {
         method: 'POST',
         body: JSON.stringify({
           email: inputEmail,
-          password: inputPassword,
+          password: inputPassword
         }),
         headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-
-      .then(responce => {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+      .then((responce) => {
         console.log('Vous avez réusie à vous inscrire');
         return responce.json();
       })
 
-      .then(data => {
+      .then((data) => {
         console.log(data);
 
         if (data) {
           navigate('/login');
-        } 
+        }
 
         if (!data.message) {
-          setOpenSnackBar(true)
-          navigate('/api/auth/signup')
+          setOpenSnackBar(true);
+          navigate('/api/auth/signup');
         }
       })
 
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
-      })
-      
-    };
+      });
+  };
 
-    function handleSnackBar(){
-      return(
-          <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={() => setOpenSnackBar(false)}>
-              <Alert severity= "error">Veuillez vérifier votre email ou votre mot de passe (1 majuscule, 1 minuscule, 2 chiffres, 6 caractéres min à 100 max).</Alert>
-          </Snackbar>
-      )
-    }
-    
+  function handleSnackBar() {
     return (
-        <div className="signupPage">
-            <h1>Signup</h1>
-            <form className="signup" onSubmit={handleSubmit}>
-                <label htmlFor="Mail">Email :</label>
-                <input  
-                        onChange={e => setInputEmail(e.target.value)} 
-                        value={inputEmail.email} 
-                        type="text" 
-                        id="Mail" 
-                        name="Mail"
-                        required
-                        size="10"
-                        placeholder="Email"/>
-                <label htmlFor="Password">Password :</label>
-                <input 
-                    type="text" 
-                    id="Password" 
-                    name="password" 
-                    required 
-                    size="10"
-                    onChange={e => setInputPassword(e.target.value)} 
-                    value={inputPassword.password}
-                    placeholder="Password"/>
-                <Button
-                type='submit'
-                buttonName="S'inscrire"/>
-            </form>
-            {handleSnackBar()}
-        </div>
-    )
+      <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={() => setOpenSnackBar(false)}>
+        <Alert severity="error">
+          Veuillez vérifier votre email ou votre mot de passe (1 majuscule, 1 minuscule, 2 chiffres,
+          6 caractéres min à 100 max).
+        </Alert>
+      </Snackbar>
+    );
+  }
+
+  return (
+    <div className="signupPage">
+      <h1>Signup</h1>
+      <form className="signup" onSubmit={handleSubmit}>
+        <label htmlFor="Mail">Email :</label>
+        <input
+          onChange={(e) => setInputEmail(e.target.value)}
+          value={inputEmail.email}
+          type="text"
+          id="Mail"
+          name="Mail"
+          required
+          size="10"
+          placeholder="Email"
+        />
+        <label htmlFor="Password">Password :</label>
+        <input
+          type="password"
+          id="Password"
+          name="password"
+          required
+          size="10"
+          onChange={(e) => setInputPassword(e.target.value)}
+          value={inputPassword.password}
+          placeholder="Password"
+        />
+        <Button type="submit" buttonName="Signup" />
+      </form>
+      {handleSnackBar()}
+    </div>
+  );
 }

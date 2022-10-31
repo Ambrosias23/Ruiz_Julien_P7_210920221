@@ -1,16 +1,23 @@
 import Button from '../components/Button';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Create = () => {
-  const token = localStorage.getItem('TOKEN');
   const userId = localStorage.getItem('userId');
+  const token = localStorage.getItem('TOKEN');
+  const isLoggedIn = token === null ? false : true;
   const navigate = useNavigate();
   const [image, setImage] = useState('');
   const [title, setTitle] = useState('');
   const [previewImage, setPreviewImage] = useState('');
   const [text, setText] = useState('');
-  
+
+  useEffect(() => {
+    if (isLoggedIn === false) {
+      navigate(`/login`);
+    }
+  }, []);
+
   const onImageChange = (e) => {
     const [file] = e.target.files;
     setImage(file);
@@ -50,7 +57,7 @@ const Create = () => {
     <div className="pageCreate">
       <h1>Create</h1>
       <form className="create" onSubmit={handleSubmit}>
-        <label htmlFor="Mail">Titre :</label>
+        <label htmlFor="Mail">Title :</label>
         <input
           type="text"
           required
@@ -59,7 +66,7 @@ const Create = () => {
           maxLength="30"
           size="10"
           className="titleCreate"
-          placeholder="Votre titre"
+          placeholder="Title"
           value={title}
         />
         <label htmlFor="description">Contenu :</label>
@@ -71,10 +78,10 @@ const Create = () => {
           rows={10}
           cols={50}
           className="contenuCreate"
-          placeholder="Votre contenu"
+          placeholder="What's up ?"
         />
         <label htmlFor="post" className="pictureCreate">
-          Choisissez une photo:
+          Choose a picture:
         </label>
         <input
           type="file"
@@ -84,7 +91,7 @@ const Create = () => {
           accept="image/png, image/jpeg"
         />
         <img src={previewImage} alt="" />
-        <Button />
+        <Button buttonName="Create" />
       </form>
     </div>
   );

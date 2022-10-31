@@ -1,5 +1,9 @@
 @charset "UTF-8";
 /* Installer pour préfixe navigateur https://openclassrooms.com/fr/courses/6106181-simplifiez-vous-le-css-avec-sass/6612156-utilisez-autoprefixer-pour-creer-du-code-adapte-a-tous-les-navigateurs */
+body {
+  font-family: "lato";
+}
+
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */
@@ -312,6 +316,7 @@ template {
 
 /* Header */
 header {
+  font-family: "Lato", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Droid Sans", sans-serif;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -397,6 +402,7 @@ main {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  font-family: "Lato", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Droid Sans", sans-serif;
 }
 main .titleHome {
   display: flex;
@@ -495,13 +501,23 @@ main .titleHome {
   cursor: pointer;
 }
 
+.link {
+  text-decoration: none;
+  color: #4f5164;
+}
+
 .actionAuth {
   width: 100%;
   background-color: white;
 }
 
+.like:hover {
+  color: green;
+}
+
 /* Footer */
 footer {
+  font-family: "Lato", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Droid Sans", sans-serif;
   border-top: 2px solid rgb(79, 81, 100);
   background-color: rgb(79, 81, 100);
   display: flex;
@@ -668,6 +684,7 @@ footer {
   width: 200px;
   height: 50px;
   box-shadow: 0px 0px 0 0px #4f5164, 0px 0px 0 0px #555a86;
+  padding-left: 0px;
 }
 .button input:hover {
   transition: linear 0.8s;

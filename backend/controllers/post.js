@@ -2,7 +2,8 @@ const fs = require('fs');
 const Post = require('../models/post');
 
 exports.listPost = (req, res, next) => {
-  Post.find().sort({ updatedAt: 'ASC' })
+  Post.find()
+    .sort({ updatedAt: 'ASC' })
     .then((posts) => res.status(200).json(posts))
     .catch((err) => res.status(500).json(err));
 };
@@ -16,7 +17,7 @@ exports.getOnePost = (req, res, next) => {
 exports.createPost = (req, res, next) => {
   const postObject = JSON.parse(req.body.post);
   postObject.userId = req.body.userId;
-  
+
   delete postObject._id;
   const post = new Post({
     ...postObject,
@@ -27,7 +28,6 @@ exports.createPost = (req, res, next) => {
     .then(() => res.status(201).json({ message: 'Post enregistré !' }))
     .catch((error) => res.status(400).json({ error }));
 };
-
 exports.modifyPost = (req, res, next) => {
   if (req.file) {
     Post.findOne({ _id: req.params.id })
@@ -60,11 +60,11 @@ exports.deletePost = (req, res, next) => {
       fs.unlink(`images/${filename}`, () => {
         Post.deleteOne({ _id: req.params.id })
           .then(() => {
-            res.status(200).json({  });
+            res.status(200).json({});
           })
           .catch((error) => res.status(401).json({ error }));
       });
-    //}
+      //}
     })
     .catch((error) => {
       res.status(500).json({ error });
@@ -74,7 +74,7 @@ exports.deletePost = (req, res, next) => {
 exports.likePost = (req, res, next) => {
   Post.findOne({ _id: req.params.id })
     .then((post) => {
-      if (!post.usersLiked.includes(req.params.userId) && !post.usersDisliked.includes(req.params.userId)) {
+      if (!post.usersLiked.includes(req.params.userId)) {
         Post.updateOne(
           { _id: req.params.id },
           {
@@ -86,73 +86,19 @@ exports.likePost = (req, res, next) => {
           .then(() => res.status(200).json({ message: 'Post like +1' }))
           .catch((error) => res.status(400).json({ error }));
       } else {
-        if(likes !== 0){
-        
-        Post.updateOne(
-          { _id: req.params.id },
-          {
-            $inc: { likes: -1 },
+        if (post.usersLiked.includes(req.params.userId)) {
+          Post.updateOne(
+            { _id: req.params.id },
+            {
+              $inc: { likes: -1 },
 
-            $pull: { usersLiked: req.params.userId }
-          }
-        )
-          .then(() => res.status(200).json({ message: 'Post like 0' }))
-          .catch((error) => res.status(400).json({ error }));
-      } else {
-        Post.updateOne(
-          { _id: req.params.id },
-          {
-            $inc: { likes: null },
-
-            $pull: { usersLiked: req.params.userId }
-          }
-        )
-          .then(() => res.status(200).json({ message: 'Post like 0' }))
-          .catch((error) => res.status(400).json({ error }));
+              $pull: { usersLiked: req.params.userId }
+            }
+          )
+            .then(() => res.status(200).json({ message: 'Post like 0' }))
+            .catch((error) => res.status(400).json({ error }));
+        }
       }
-    }
-    })
-    .catch((error) => res.status(404).json({ error }));
-};
-exports.dislikePost = (req, res, next) => {
-  Post.findOne({ _id: req.params.id })
-    .then((post) => {
-      if (!post.usersLiked.includes(req.params.userId) && !post.usersDisliked.includes(req.params.userId)) {
-        Post.updateOne(
-          { _id: req.params.id },
-          {
-            $inc: { dislikes: 1 },
-
-            $push: { usersDisliked: req.params.userId }
-          }
-        )
-          .then(() => res.status(200).json({ message: 'Post dislike +1' }))
-          .catch((error) => res.status(400).json({ error }));
-      } else {
-        if(dislikes !== 0){
-        Post.updateOne(
-          { _id: req.params.id },
-          {
-            $inc: { dislikes: -1 },
-
-            $pull: { usersDisliked: req.params.userId }
-          }
-        )
-          .then(() => res.status(200).json({ message: 'Post dislike 0' }))
-          .catch((error) => res.status(400).json({ error }));
-      } else {
-        Post.updateOne(
-          { _id: req.params.id },
-          {
-            $inc: { dislikes: null },
-
-            $pull: { usersDisliked: req.params.userId }
-          }
-        )
-          .then(() => res.status(200).json({ message: 'Post like 0' }))
-          .catch((error) => res.status(400).json({ error }));
-      }
-    }
     })
     .catch((error) => res.status(404).json({ error }));
 };

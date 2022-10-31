@@ -5,6 +5,7 @@ main {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  font-family: 'Lato', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Droid Sans', sans-serif;
   .titleHome{
     display: flex;
     align-items: center;
@@ -79,16 +80,26 @@ main {
               font-size: 17px;
               height: 40px;
               font-weight: 600;
+              
               }
                
 }
 .actionCard div{
   cursor: pointer;
   
-}
+  
+}.link{
+    text-decoration: none;
+    color:$greyP;
+  }
 
 .actionAuth{
   
   width: 100%;
   background-color: white;
+}
+.like:hover{
+  color: green;
+  
+  
 }
